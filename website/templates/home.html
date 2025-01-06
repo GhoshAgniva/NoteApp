@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+<title>{% block title %}HOME{% endblock %}
+
+{% block content %}
+
+<h1 align="center">Notes</h1>
+
+
+
+<!-- List of notes -->
+<ul class="list-group list-group-flush" id="notes">
+    {% for note in user.notes %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ note.data }}
+        <div>
+            <form method="POST" style="display: inline;">
+                <input type="hidden" name="delete_note_id" value="{{ note.id }}">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+            <form method="GET" action="{{ url_for('views.export_note_pdf', note_id=note.id) }}" style="display:inline;">
+                <button type="submit" class="btn btn-primary btn-sm">Export as PDF</button>
+            </form>
+            <a href="{{ url_for('views.edit_note', note_id=note.id) }}" class="btn btn-warning btn-sm">Edit</a>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Add a new note -->
+<form method="POST">
+    <textarea name="note" id="note" class="form-control"></textarea>
+    <br />
+    <div align="center">
+        <button type="submit" class="btn btn-primary">Add Note</button>
+    </div>
+</form>
+<br>
+<!-- Excalidraw Iframe: This will allow the user to draw on the whiteboard -->
+<div style="display: flex; justify-content: center; margin-bottom: 20px;">
+    <iframe src="https://excalidraw.com" width="600" height="400" style="border:none;"></iframe>
+</div>
+
+
+{% endblock %}
