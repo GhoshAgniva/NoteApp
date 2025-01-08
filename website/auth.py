@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash , check_password_hash
 from .models import User
 from website import db
 from flask_login import login_user, login_required , logout_user,current_user
+import re
 
 
 
@@ -54,9 +55,18 @@ def signup():
         elif len(first_name) < 2:
             flash("Name should be more than 1 character", category="error")
         elif len(password1) < 7:
+        
             flash("Password must be more than 7 characters", category='error')
         elif password1 != password2:
             flash("Both passwords must match", category="error")
+        elif not re.search(r'[A-Z]',password1):
+            flash("Password Should be one UpperCase Letter",category='error')
+        elif not re.search(r'[a-z]',password1):
+            flash("Password  must be one LowerCase character",category='error')
+        elif not re.search(r'[0-9]',password1):
+            flash("Password should contains one number", category='error')
+        elif not re.search(r'[!@#$%^&*(),.?":{}|<>]', password1):
+            flash("Password should containss one special character", category='error')
         else:
             # Create a new user
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1, method='pbkdf2:sha256'))
